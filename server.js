@@ -9,7 +9,7 @@ const socketIo = require("socket.io");
 const signalingServer = require("./services/signaling");
 const chatRoutes = require("./routes/chat");
 const Chat = require("./models/chat");
-const bcrypt = require("bcrypt");
+//const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
@@ -195,15 +195,15 @@ app.post("/api/users", async (req, res) => {
       .json({ message: "User with this mobile already exist" });
       }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    //const salt = await bcrypt.genSalt(10);
+    //const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
       firstName,
       lastName,
       email,
       mobile,
-      password: hashedPassword,
+      password,
     });
 
     await newUser.save();
@@ -233,10 +233,10 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
+    // const isMatch = await bcrypt.compare(password, user.password);
+    // if (!isMatch) {
+    //   return res.status(400).json({ message: "Invalid email or password" });
+    // }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "4h",
